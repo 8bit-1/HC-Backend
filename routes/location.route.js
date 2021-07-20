@@ -5,6 +5,6 @@ const locationController = require('../controllers/location.controller');
 
 router.route('/countries').get(locationController.getCountries);
 router.route('/provinces/:id').get(locationController.getProvinces);
-router.route('/cities/:id').get(locationController.getCities);
+router.route('/cities/:idCountry/:idProvince').get(locationController.getCities);
 
 module.exports = router;

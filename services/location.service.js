@@ -27,11 +27,11 @@ const getProvinces = async function (idCountry) {
 };
 
 // obtener ciudad por provincia
-const getCities = async function (idProvince) {
+const getCities = async function (idCountry, idProvince) {
   //Consulta sql aqui
-  var consulta = 'SELECT idCity  as id, city FROM city where Province_idProvince=?';
+  var consulta = 'SELECT idCity  as id, city FROM city where Province_idProvince=? and Province_Country_idCountry=?';
   try {
-    const [city] = await db.execute(consulta, [idProvince]);
+    const [city] = await db.execute(consulta, [idProvince, idCountry]);
     return city;
   } catch (error) {
     //Log Errors
