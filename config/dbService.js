@@ -8,10 +8,8 @@ async function queryCon(sql, params) {
     conn.query('SELECT 1 + 1 AS solution', function (err, results, fields) {
       console.log('The solution is: ', results);
 
-      conn.release();
-
       // handle error after release
-      if (err) throw error;
+      if (err) throw err;
     });
 
     conn.release();

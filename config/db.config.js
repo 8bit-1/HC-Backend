@@ -16,7 +16,7 @@ const db = createPool({
     ca: serverCa,
   },
   waitForConnections: true,
-  connectionLimit: 10,
+  connectionLimit: 20,
   queueLimit: 0,
 });
 

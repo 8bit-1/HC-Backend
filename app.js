@@ -4,7 +4,8 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 dotenv.config();
 
-const userRoute = require('./routes/User.route');
+const userRoute = require('./routes/user.route');
+const locationRoute = require('./routes/location.route');
 // SETTINGS
 app.set('port', process.env.PORT || 6000);
 
@@ -17,6 +18,7 @@ app.use(express.json());
 
 // ROUTES
 app.use('/user', userRoute);
+app.use('/app', locationRoute);
 
 //Starting Server
 app.listen(app.get('port'), () => {
