@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "handicraft-app",
+  "private_key_id": "65f1f3cba86cd378229db98a0fe253c0394ef73a",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDjXCObRRljO35R\nZrYBYjre6jqaXNBVwM8AoKzywtR04SQfBwPTBC0Z1Tcu+uEizZJncvmFyGz58y/G\n4buFucRZzOhjBLnjVeNkbRcv773D5UrWAmSK/7NzFUhFp/0ItWFS9eIawvVBFTdK\ndFZbjd1AjdjflSP6s6N27Lh7C+0B18V55hhKCdgdNTrpmt6leZvwQ3ZwNl0nENoe\ndNnWEmBS+OeZkrco5FpaRSEQdP/v+4BJnHpnhcU+r1/HtzWo0O+0atFuxev+fpec\ndE5HniLGCQf/LyXwTPXvSRRxT7LLvH9vzyzvIA7cGmpJr5MI8LGccj3KwthdJ2AN\nZ7hz+CKZAgMBAAECggEAXbU2ucLfpV46gItwXZ6ifAkXUVMKzSVUTEJtNftmPKwk\nyqMGCP2SJzERdwwRKdqHypqBTIognF6GpRaZxxKbYpXJfDJQ+WmHePdblLbfxHNn\nhlBjJ0UfrcGqUYddC69SZzKP2A7drc70RHwxsbeFZxtvtStPsn9C0vvbR1/Rdi20\n9AC7VsfkB12O4ONqKPjScDb2vF1RfsIBxQ/XuBHYK77MI4s+p9SOvLaJg+THcH+I\n1eRNmTJfeGn3nsHhK0Rw3P1oKOlhV3uJVYACh/rLyLKeH7IZh2v6GSyHbXhmYkwM\n4sIgjOtT4Bz2o5kJRaIqfYOj8NXdWJC4SJjQlUTOfwKBgQD/fwaboi+gu96FAt2H\ne5/1fapOlFiWQpc8tLLTEgOMB+Bg3qnYnASLYLJ45AqaPq0D2g3yKFcNSVCutyZq\nb31E0RL7JhSeHlMDFxLHN6ZhRl79Hyq1vCFYnR2O70Ln9BGO61JMnipzAUzCnY5V\n5SO3mn3gZavBaP63stiaslYjywKBgQDjzuj9VLC9dvXvHf69N7mwN/Kxv3Fk6feb\nl8Fw3xUO9ADM9GpG96K5yRaiBy0KthQna0bBP7ferjuXdFu9Y+TLXi/r3tzBgav6\nQtO8OLGq6zI9Ywp3847OJu7FJ18U5u6JIUEMBCyfYYDH8UfFRukUriFLBx+IR+yx\n/UMcM4duqwKBgQC4L02HMsNc/zJp9ufWfKOS6PW2UjEOmZDHXYiwqoLOFvuFOd99\nXPPVum7Owa53BYnahf6ZvMUMufalDTlvb1ICIyqozQn99uRnDOInpZGW/JELrsUu\nYCI17IXbfdZgus1Rl4kr3LXDVIOOpOBwQZCfEot+Ei1gb514tkB6POfmQwKBgBbT\nuecAoIErtXMTd14wgkvVH12OSGeLRkNyDnEn+W05KAdhinC4CbdCHiF4RJwpKJXW\nmw1sPBl1LgV8JGEy7E8wje69szM0si3umlbm+26cCLm7/eWNI0cnAZAB5PYsOcTF\n70Wr+WizFXtzgvSSqXJoDG//M7qtMluXfC0MQMrnAoGBANjhssF0OGSW4RA3eZXu\nIbRkyFSzkMxLvNGIDJEtmw8EgCJP9ntBQ8TdWuUCDemfhyNsMAsX+b0h3i2rTm6M\nPnhbPX+FUVWxWHSVoOLRYEGCNjgBbxUgceQmAxBWltFoQ0CBq+skvkIh6FOhLmO7\nDBA1qJX16s051C1OZ04JGWkl\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-bvemx@handicraft-app.iam.gserviceaccount.com",
+  "client_id": "115170476987861858779",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-bvemx%40handicraft-app.iam.gserviceaccount.com"
+}

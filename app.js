@@ -2,10 +2,19 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const dotenv = require('dotenv');
-dotenv.config();
+const admin = require('firebase-admin');
+const serviceAccount = require('./env/handicraft-app-firebase-admin.json');
 
 const userRoute = require('./routes/user.route');
 const locationRoute = require('./routes/location.route');
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+});
+
+// env
+dotenv.config();
+
 // SETTINGS
 app.set('port', process.env.PORT || 6000);
 
