@@ -76,7 +76,7 @@ const updateProduct = async function (params, idProduct){
        }
 }
 
-const getProducts = async function(){
+const getProducts = async function(init,range){
     var getAllProducts = `SELECT product.idProduct, product.User_idUser as idUser, product.name, 
 		CONCAT(city.city,", ",country.country) as location,
         CONCAT(product.price," ",RIGHT( coin.coin,3 )) as cost,
@@ -92,18 +92,46 @@ const getProducts = async function(){
       WHERE  product.State_idState=1
       AND user.State_idState=1
       GROUP BY product.idProduct
-      ORDER BY product.datePublication DESC`
+      ORDER BY product.datePublication DESC
+      LIMIT ?,?`
     try {
-      const[productos] = await db.execute(getAllProducts)
+      const[productos] = await db.execute(getAllProducts,[init,range])
       return productos;
     } catch (error) {
       throw Error('Error while Paginating products: ' + error);
     }
 };
 
+const getProductsLogged = async function(idUser,init,range){
+  var getAllProductsLogged = `SELECT product.idProduct, product.User_idUser as idUser, product.name, 
+  CONCAT(city.city,", ",country.country) as location,
+      CONCAT(product.price," ",RIGHT( coin.coin,3 )) as cost,
+      img.urlImage, CONVERT( DATE(product.datePublication),char) AS datep
+      from product INNER JOIN city  ON product.City_idCity=city.idCity 
+    AND  product.City_Province_idProvince=city.Province_idProvince
+    AND product.City_Province_Country_idCountry=city.Province_Country_idCountry 
+    INNER JOIN province  ON product.City_Province_idProvince=province.idProvince
+    INNER JOIN country ON product.City_Province_Country_idCountry=country.idCountry
+    INNER JOIN coin ON product.Coin_idCoin=coin.idCoin
+    INNER JOIN (SELECT DISTINCT MIN( idImages) ,urlImage, Product_idProduct FROM images GROUP BY Product_idProduct)  as img ON img.Product_idProduct = product.idProduct
+    INNER JOIN user ON user.idUser=product.User_idUser
+    WHERE  product.State_idState=1
+    AND user.State_idState=1
+    AND user.idUser<>?
+    GROUP BY product.idProduct
+    ORDER BY product.datePublication DESC
+    LIMIT ?,?`
+  try {
+    const[productos] = await db.execute(getAllProductsLogged,[idUser,init,range])
+    return productos;
+  } catch (error) {
+    throw Error('Error while Paginating products: ' + error);
+  }
+};
 
 module.exports = {
   createProduct,
   updateProduct,
-  getProducts
+  getProducts,
+  getProductsLogged
 };
