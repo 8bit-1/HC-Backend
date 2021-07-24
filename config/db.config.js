@@ -1,11 +1,9 @@
 const fs = require('fs');
 const { createPool } = require('mysql2/promise');
 
-const serverCa = [fs.readFileSync(__dirname + '/BaltimoreCyberTrustRoot.crt.pem', 'utf8')];
+const serverCa = [fs.readFileSync(__dirname + '/DigiCertGlobalRootG2.crt.pem', 'utf8')];
 
-// config\BaltimoreCyberTrustRoot.crt.pem
-// console.log(serverCa);
-
+console.log('Usuario', process.env.DB_USER);
 const db = createPool({
   host: process.env.DB_HOST || '',
   user: process.env.DB_USER || '',
@@ -19,5 +17,12 @@ const db = createPool({
   connectionLimit: 20,
   queueLimit: 0,
 });
+
+// db.query('select 1+1 as test')
+//   .then((res) => {
+//     const [[val]] = res;
+//     console.log(val);
+//   })
+//   .catch((err) => console.log(err));
 
 module.exports = db;
