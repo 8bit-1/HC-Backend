@@ -3,7 +3,7 @@ const db = require('../config/db.config');
 // Obtener paises
 const getCountries = async function () {
   //Consulta sql aqui
-  var query = 'SELECT idCountry as id, country FROM country;';
+  var query = 'SELECT idCountry as id, country as name FROM country;';
   try {
     const [countries] = await db.query(query);
     return countries;
@@ -16,7 +16,7 @@ const getCountries = async function () {
 // obtener provincia por pais
 const getProvinces = async function (idCountry) {
   //Consulta sql aqui
-  var consulta = 'SELECT idProvince as id, province FROM province where Country_idCountry=?';
+  var consulta = 'SELECT idProvince as id, province as name FROM province where Country_idCountry=?';
   try {
     const [provinces] = await db.execute(consulta, [idCountry]);
     return provinces;
@@ -29,7 +29,7 @@ const getProvinces = async function (idCountry) {
 // obtener ciudad por provincia
 const getCities = async function (idCountry, idProvince) {
   //Consulta sql aqui
-  var consulta = 'SELECT idCity  as id, city FROM city where Province_idProvince=? and Province_Country_idCountry=?';
+  var consulta = 'SELECT idCity  as id, city as name FROM city where Province_idProvince=? and Province_Country_idCountry=?';
   try {
     const [city] = await db.execute(consulta, [idProvince, idCountry]);
     return city;
