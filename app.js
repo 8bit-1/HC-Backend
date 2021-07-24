@@ -14,6 +14,7 @@ const userRoute = require('./routes/user.route');
 const locationRoute = require('./routes/location.route');
 
 const productRoute = require('./routes/product.route');
+const coinRoute = require('./routes/coin.route');
 
 // SETTINGS
 app.set('port', process.env.PORT || 6000);
@@ -29,7 +30,7 @@ app.use(express.json());
 app.use('/user', userRoute);
 app.use('/app', locationRoute);
 app.use('/product', productRoute);
-
+app.use('/app', coinRoute);
 //Starting Server
 app.listen(app.get('port'), () => {
   console.log('Server on port', app.get('port'));
