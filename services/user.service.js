@@ -77,9 +77,9 @@ const createUser2 = async function (params) {
 
 // registrar usuario con compania (crear una transaccion mejor)
 const createUserCompany = async (params) => {
-  var consulta = `CALL registerUserAndCompany2(?,?,?,?,?,?,?,?,?,?)`;
+  var consulta = `CALL registerUserAndCompany(?,?,?,?,?,?,?,?,?,?,?)`;
   try {
-    const [[result]] = await db.execute(consulta, [
+    const [result] = await db.execute(consulta, [
       params.idUser,
       params.firstName,
       params.lastName,
@@ -87,17 +87,25 @@ const createUserCompany = async (params) => {
       params.phoneNumber,
       params.photoProfile,
       params.companyName,
+      params.description,
       params.country,
       params.province,
       params.city,
     ]);
-
-    console.log(result[0]);
-    return result[0];
+    console.log(result);
+    return result;
   } catch (error) {
-    throw Error('Error while Creating User with company: ' + error);
+    throw new excepcion('Error while Creating User with company', error);
   }
 };
+
+function excepcion(mensaje, error) {
+  this.message = mensaje;
+  this.error = error;
+  this.toString = function () {
+    return this.message + this.error;
+  };
+}
 
 module.exports = {
   getUsers,
