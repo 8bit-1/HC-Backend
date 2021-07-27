@@ -1,4 +1,5 @@
 const db = require('../config/db.config');
+const { excepcion } = require('../util/errorFunctions');
 
 // Obtener usuario por id
 const getUserById = async function (id) {
@@ -95,17 +96,9 @@ const createUserCompany = async (params) => {
     console.log(result);
     return result;
   } catch (error) {
-    throw new excepcion('Error while Creating User with company', error);
+    throw new excepcion('Error while Creating User with company. ', error);
   }
 };
-
-function excepcion(mensaje, error) {
-  this.message = mensaje;
-  this.error = error;
-  this.toString = function () {
-    return this.message + this.error;
-  };
-}
 
 module.exports = {
   getUsers,
