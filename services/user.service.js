@@ -48,6 +48,7 @@ const createUser = async function (params) {
 
     return await getUserById(params.idUser);
   } catch (error) {
+    console.log(error);
     throw Error('Error while Creating User: ' + error);
   }
 };
