@@ -26,7 +26,7 @@ const createUser = async (req, res) => {
     var user = await userService.createUser(req.body);
     return res.status(200).json({ data: user, message: 'Success' });
   } catch (error) {
-    return res.status(400).json({ status: 400, message: error.message });
+    return res.status(400).json({ status: 400, error });
   }
 };
 

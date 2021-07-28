@@ -35,21 +35,23 @@ const createUser = async function (params) {
   var query = `CALL registerUser(?,?,?,?,?,?)`;
 
   try {
-    const [estado] = await db.execute(query, [
-      params.idUser,
-      params.firstName,
-      params.lastName,
-      params.email,
-      params.phoneNumber,
-      params.photoProfile,
-    ]);
-    console.log(estado);
-    // if (estado.affectedRows != 0) return await getUserById(params.idUser);
-
-    return await getUserById(params.idUser);
+    let verifiedExist = await db.execute(`SELECT COUNT(idUser) as exist FROM hechoencasa.user WHERE idUser = '${params.idUser}'`);
+    const { exist }  = verifiedExist[0][0];
+    if ( !exist ) {
+      const [estado] = await db.execute(query, [
+        params.idUser,
+        params.firstName,
+        params.lastName,
+        params.email,
+        params.phoneNumber,
+        params.photoProfile,
+      ]);
+      return await getUserById(params.idUser);
+    } else {
+      return await getUserById(params.idUser);
+    }
   } catch (error) {
-    console.log(error);
-    throw Error('Error while Creating User: ' + error);
+    throw new excepcion('Error while Creating User ', error);
   }
 };
 
@@ -57,7 +59,6 @@ const createUser2 = async function (params) {
   var consulta = `INSERT INTO USER (idUser,name,lastName,email,phone,photoProfile,Verification,State_idState) VALUES (?,?,?,?,?,?,?,?)`;
 
   try {
-    console.log('Ejecutando Consulta');
     const [estado] = await db.execute(consulta, [
       params.idUser,
       params.firstName,
