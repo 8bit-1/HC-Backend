@@ -27,10 +27,10 @@ const createUserCompany = async (req, res) => {
     return res.status(200).json({ data: user, message: 'Success' });
   } catch (error) {
     // you can retrieve information from the internal error
-    // const InErr = error.error;
+    const InErr = error.error;
     return res.status(400).json({
       status: 400,
-      message: error.message + error.error.message,
+      message: error.message + InErr.message,
     });
   }
 };
