@@ -44,10 +44,20 @@ const getProductsLogged = async (req, res) => {
   }
 };
 
+const getProductById = async (req, res) => {
+  const idProduct = req.params.idProduct
+  try {
+    var products = await productService.getProductsById(idProduct);
+    return res.status(200).json({ data: products, message: 'Sucess' });
+  } catch (error) {
+    return res.status(400).json({ status: 400, message: error.message });
+  }
+};
 
 module.exports = {
     createProduct,
     updateProduct,
     getProducts,
-    getProductsLogged
+    getProductsLogged,
+    getProductById
 };
