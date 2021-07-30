@@ -3,27 +3,27 @@ const userService = require('../services/user.service');
 const getUsers = async (req, res) => {
   // Validate request parameters, queries using express-validator
   try {
-    var users = await userService.getUsers();
-    return res.status(200).json({ data: users, message: 'Sucess' });
+    let users = await userService.getUsers();
+    return res.status(200).json({ data: users, message: 'Success' });
   } catch (error) {
-    return res.status(400).json({ status: 400, message: error.message });
+    return res.status(400).json({ status: 400, error });
   }
 };
 
 const getUser = async (req, res) => {
   // Validate request parameters, queries using express-validator
   try {
-    var users = await userService.getUserById(req.params.idUser);
-    return res.status(200).json({ data: users, message: 'Sucess' });
+    let users = await userService.getUserById(req.params.idUser);
+    return res.status(200).json({ data: users, message: 'Success' });
   } catch (error) {
-    return res.status(400).json({ status: 400, message: error.message });
+    return res.status(400).json({ status: 400, error });
   }
 };
 
 const createUser = async (req, res) => {
   try {
     //Verificar que los nombre de los parametros sean correctos
-    var user = await userService.createUser(req.body);
+    let user = await userService.createUser(req.body);
     return res.status(200).json({ data: user, message: 'Success' });
   } catch (error) {
     return res.status(400).json({ status: 400, error });
@@ -33,15 +33,23 @@ const createUser = async (req, res) => {
 const createUserCompany = async (req, res) => {
   try {
     //Verificar que los nombre de los parametros sean correctos
-    var user = await userService.createUserCompany(req.body);
+    let user = await userService.createUserCompany(req.body);
     return res.status(200).json({ data: user, message: 'Success' });
   } catch (error) {
     // you can retrieve information from the internal error
-    const InErr = error.error;
-    return res.status(400).json({
-      status: 400,
-      message: error.message + InErr.message,
-    });
+    return res.status(400).json({ status: 400, error });
+  }
+};
+
+const getSubscribedCategories = async (req, res) => {
+  try {
+    let categories = await userService.getSubscribedCategories(req.params.idUser);
+    // console.log(categories);
+    categories = categories.map((item) => item.categoria);
+    // console.log(categories);
+    return res.status(200).json({ data: categories, message: 'Success' });
+  } catch (error) {
+    res.status(400).json({ status: 400, error });
   }
 };
 
@@ -50,4 +58,5 @@ module.exports = {
   getUser,
   createUser,
   createUserCompany,
+  getSubscribedCategories,
 };

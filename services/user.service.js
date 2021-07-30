@@ -4,40 +4,35 @@ const { excepcion } = require('../util/errorFunctions');
 // Obtener usuario por id
 const getUserById = async function (id) {
   //Consulta sql aqui
-
-  var consulta = 'SELECT * FROM USER WHERE idUser=?';
-
+  const consulta = 'SELECT * FROM USER WHERE idUser=?';
   try {
     const [user] = await db.execute(consulta, [id]);
     return user[0];
   } catch (error) {
     //Log Errors
-    throw Error('Error while getting User: ' + error);
+    throw new excepcion('Error while getting User.', error);
   }
 };
 
 // Obtener todos los usuarios
 const getUsers = async function () {
-  //Consulta sql aqui
-
-  var consulta = 'SELECT * FROM USER';
-
+  const consulta = 'SELECT * FROM USER';
   try {
     const [users] = await db.query(consulta);
     return users;
   } catch (error) {
-    //Log Errors
-    throw Error('Error while Paginating Users: ' + error);
+    throw new excepcion('Error while Paginating Users.', error);
   }
 };
 
 const createUser = async function (params) {
-  var query = `CALL registerUser(?,?,?,?,?,?)`;
-
+  const query = `CALL registerUser(?,?,?,?,?,?)`;
   try {
-    let verifiedExist = await db.execute(`SELECT COUNT(idUser) as exist FROM hechoencasa.user WHERE idUser = '${params.idUser}'`);
-    const { exist }  = verifiedExist[0][0];
-    if ( !exist ) {
+    let verifiedExist = await db.execute(
+      `SELECT COUNT(idUser) as exist FROM hechoencasa.user WHERE idUser = '${params.idUser}'`
+    );
+    const { exist } = verifiedExist[0][0];
+    if (!exist) {
       const [estado] = await db.execute(query, [
         params.idUser,
         params.firstName,
@@ -56,8 +51,7 @@ const createUser = async function (params) {
 };
 
 const createUser2 = async function (params) {
-  var consulta = `INSERT INTO USER (idUser,name,lastName,email,phone,photoProfile,Verification,State_idState) VALUES (?,?,?,?,?,?,?,?)`;
-
+  const consulta = `INSERT INTO USER (idUser,name,lastName,email,phone,photoProfile,Verification,State_idState) VALUES (?,?,?,?,?,?,?,?)`;
   try {
     const [estado] = await db.execute(consulta, [
       params.idUser,
@@ -74,13 +68,12 @@ const createUser2 = async function (params) {
 
     return {};
   } catch (error) {
-    throw Error('Error while Creating User: ' + error);
+    throw new excepcion('Error while Creating User.', error);
   }
 };
 
-// registrar usuario con compania (crear una transaccion mejor)
 const createUserCompany = async (params) => {
-  var consulta = `CALL registerUserAndCompany(?,?,?,?,?,?,?,?,?,?,?)`;
+  const consulta = `CALL registerUserAndCompany(?,?,?,?,?,?,?,?,?,?,?)`;
   try {
     const [result] = await db.execute(consulta, [
       params.idUser,
@@ -95,10 +88,21 @@ const createUserCompany = async (params) => {
       params.province,
       params.city,
     ]);
-    console.log(result);
     return result;
   } catch (error) {
-    throw new excepcion('Error while Creating User with company. ', error);
+    throw new excepcion('Error while Creating User with company.', error);
+  }
+};
+
+const getSubscribedCategories = async (idUser) => {
+  const consulta = `SELECT name as categoria FROM SUBSCRIPTION
+    INNER JOIN CATEGORY ON CATEGORY.idCategory = SUBSCRIPTION.Category_idCategory
+    WHERE User_idUser =  "${idUser}" `;
+  try {
+    const [result] = await db.query(consulta);
+    return result;
+  } catch (error) {
+    throw new excepcion('Error obtaining categories for user.', error);
   }
 };
 
@@ -107,4 +111,5 @@ module.exports = {
   createUser,
   getUserById,
   createUserCompany,
+  getSubscribedCategories,
 };
