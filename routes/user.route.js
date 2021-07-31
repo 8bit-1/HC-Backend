@@ -5,7 +5,7 @@ const { AuthToken } = require('../middlewares/tokenAuth');
 const userController = require('../controllers/user.controller');
 // ruta -> user
 
-router.route('/profile').get(userController.getUser); // problemas
+router.route('/profile/:idUser').get(userController.getUser); // problemas
 router.route('/').get(userController.getUsers).post(userController.createUser);
 router.route('/user-company').post(userController.createUserCompany);
 router.route('/categories').all(AuthToken).get(userController.getSubscribedCategories);
