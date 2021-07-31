@@ -54,10 +54,11 @@ const getProductById = async (req, res) => {
   }
 };
 
+
 module.exports = {
     createProduct,
     updateProduct,
     getProducts,
     getProductsLogged,
-    getProductById
+    getProductById,
 };
