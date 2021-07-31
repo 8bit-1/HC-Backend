@@ -8,5 +8,4 @@ router.route('/update/:idProduct').post(productController.updateProduct);
 router.route('/getAllProducts/:init/:range').get(productController.getProducts);
 router.route('/getAllProducts/:idUser/:init/:range').get(productController.getProductsLogged);
 router.route('/getInfo/:idProduct').get(productController.getProductById);
-
 module.exports = router;
