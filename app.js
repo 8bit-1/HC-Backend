@@ -17,6 +17,7 @@ const productRoute = require('./routes/product.route');
 const coinRoute = require('./routes/coin.route');
 
 const categoryRoute = require('./routes/category.route');
+const qualificationRoute = require('./routes/qualification.route');
 
 // SETTINGS
 app.set('port', process.env.PORT || 6000);
@@ -34,6 +35,7 @@ app.use('/app', locationRoute);
 app.use('/product', productRoute);
 app.use('/app', coinRoute);
 app.use('/app', categoryRoute);
+app.use('/quali', qualificationRoute);
 
 //Starting Server
 app.listen(app.get('port'), () => {
