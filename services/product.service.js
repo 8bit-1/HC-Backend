@@ -127,7 +127,7 @@ const getProductsLogged = async function (idUser, init, range) {
 };
 
 const getProductsById = async function (idProduct) {
-  const infoProduct = `SELECT product.idProduct, product.User_idUser as idUser, user.email, user.verification, product.description,
+  const infoProduct = `SELECT product.idProduct, product.User_idUser as idUser, CONCAT(user.name, " ", user.lastname) as name, user.email, user.verification, product.description,
                             CONCAT(city.city,", ",country.country) as location, CONCAT(product.price," ",RIGHT( coin.coin,3 )) as cost
                             FROM product INNER JOIN city  ON product.City_idCity=city.idCity AND  product.City_Province_idProvince=city.Province_idProvince
                             AND product.City_Province_Country_idCountry=city.Province_Country_idCountry 
@@ -138,11 +138,15 @@ const getProductsById = async function (idProduct) {
                             WHERE  product.State_idState=1
                             AND user.State_idState=1
                             AND product.idProduct=?`;
+  const getCommentsProducts = `SELECT pc.User_idUser as idUser, CONCAT(user.name, " ", user.lastname) as name, c.idComentary, c.comentary, CONVERT( DATE_FORMAT(c.datePublication,  "%d/%b/%y"),char) AS date, DATE_FORMAT(c.datePublication, " %H:%i %p ") as time 
+                            FROM comentary as c INNER JOIN productcomentary as pc ON pc.Comentary_idComentary= c.idComentary
+                            INNER JOIN product as p ON p.idProduct=pc.Product_idProduct
+                            INNER JOIN user ON pc.User_idUser=user.idUser 
+                            where c.State_idState=1 AND pc.Product_idProduct=28 ORDER BY c.datePublication;`;
   const company = `SELECT count(*) as company FROM company where User_idUser=?`;
-  const nameUser = `SELECT CONCAT(name, " ", lastname) as name FROM user where idUser=?`;
-  const nameCompany = `SELECT nameCompany as name FROM company where User_idUser=?`;
+  const companies = `SELECT idCompany, nameCompany, description FROM company where User_idUser=?`;
   const images = `SELECT urlImage as images from images where Product_idProduct=?`;
-  let name=[];
+  let userid = " ";
   try {
     let [infoP] = await db.execute(infoProduct, [
       idProduct
@@ -150,39 +154,42 @@ const getProductsById = async function (idProduct) {
     let [count]=await db.execute(company, [
       infoP[0].idUser
     ]);
-    if(count.company = 0){
-      [name] = await db.execute(nameCompany, [
-        infoP[0].idUser ]);
-    }
-    else if(count.company = 1){
-      [name] = await db.execute(nameUser, [
-        infoP[0].idUser ]);
-    }
+    userid=infoP[0].idUser;
+
     const [img] = await db.execute(images, [
       idProduct
     ]);
+    
     infoP=infoP[0];
-    infoP["name"]=name[0].name;
     var result=[];
+    var comentaries=[];
     for (var i=0; i<img.length; i++){
       result.push(img[i].images);
     }
+    const [comments] = await db.execute(getCommentsProducts, [idProduct]);
 
-
-    console.log(result);
+    infoP["company"]=count[0].company;
     infoP["images"]=result;
-
-    return infoP;
+    infoP["comments"]=comments;
+    if(count[0].company===0){
+      return infoP;
+    }else{
+      let [cc] = await db.execute(companies, [
+        userid ]);
+      infoP["idCompany"]=cc[0].idCompany;
+      infoP["nameCompany"]=cc[0].nameCompany;
+      infoP["descCompany"]=cc[0].description;
+      return infoP;
+    }
     
   } catch (error) {
     throw Error("Error getting products products: " + error);
   }
 };
-
 module.exports = {
   createProduct,
   updateProduct,
   getProducts,
   getProductsLogged,
-  getProductsById
+  getProductsById,
 };
