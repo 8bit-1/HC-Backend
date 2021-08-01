@@ -3,7 +3,7 @@ const router = express.Router();
 const { AuthToken } = require('../middlewares/tokenAuth');
 
 const userController = require('../controllers/user.controller');
-// ruta -> user
+// ruta -> user/ruta
 
 router.route('/profile/:idUser').get(userController.getUser); // problemas
 router.route('/').get(userController.getUsers).post(userController.createUser);
@@ -12,5 +12,7 @@ router.route('/categories').all(AuthToken).get(userController.getSubscribedCateg
 router.route('/category/:idCategory/subscribe').all(AuthToken).post(userController.subscribeCategory);
 router.route('/category/:idCategory/unsubscribe').all(AuthToken).delete(userController.unsubscribeCategory);
 router.route('/product').all(AuthToken).get(userController.getUserProducts);
+router.route('/products-history').all(AuthToken).get(userController.getAllUserProducts);
+router.route('/products-inactive').all(AuthToken).get(userController.getUserInactiveProducts);
 
 module.exports = router;
