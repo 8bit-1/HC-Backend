@@ -3,8 +3,7 @@ const { excepcion } = require('../util/errorFunctions');
 
 // Obtener usuario por id
 const getUserById = async function (id) {
-  //Consulta sql aqui
-  const consulta = 'SELECT * FROM USER WHERE idUser=?';
+  var consulta = 'CALL getUserByUid(?)';
   try {
     const [user] = await db.execute(consulta, [id]);
     return user[0];
@@ -106,22 +105,23 @@ const getSubscribedCategories = async (idUser) => {
 
 const getUserProducts = async (idUser) => {
   const consulta = `SELECT product.idProduct, product.User_idUser as idUser, product.name, 
-	CONCAT(city.city,", ",country.country) as location,
-      CONCAT(product.price," ",RIGHT( coin.coin,3 )) as cost,
-      img.urlImage, CONVERT( DATE(product.datePublication),char) AS datep
-      from product INNER JOIN city  ON product.City_idCity=city.idCity 
-    AND  product.City_Province_idProvince=city.Province_idProvince
-    AND product.City_Province_Country_idCountry=city.Province_Country_idCountry 
-    INNER JOIN province  ON product.City_Province_idProvince=province.idProvince
-    INNER JOIN country ON product.City_Province_Country_idCountry=country.idCountry
-    INNER JOIN coin ON product.Coin_idCoin=coin.idCoin
-    INNER JOIN (SELECT DISTINCT MIN( idImages) ,urlImage, Product_idProduct FROM images GROUP BY Product_idProduct)  as img ON img.Product_idProduct = product.idProduct
-    INNER JOIN user ON user.idUser=product.User_idUser
-    WHERE  product.State_idState=1
-    AND user.State_idState=1
-    AND user.idUser = "${idUser}"
-    GROUP BY product.idProduct
-    ORDER BY product.datePublication DESC`;
+  CONCAT(city.city,", ",country.country) as location,
+  CONCAT(product.price," ",RIGHT( coin.coin,3 )) as cost,
+  img.urlImage, CONVERT( DATE(product.datePublication),char) AS datep,
+      product.State_idState as status
+from product INNER JOIN city  ON product.City_idCity=city.idCity 
+  AND  product.City_Province_idProvince=city.Province_idProvince
+  AND product.City_Province_Country_idCountry=city.Province_Country_idCountry 
+  INNER JOIN province  ON product.City_Province_idProvince=province.idProvince
+  INNER JOIN country ON product.City_Province_Country_idCountry=country.idCountry
+  INNER JOIN coin ON product.Coin_idCoin=coin.idCoin
+  INNER JOIN (SELECT DISTINCT MIN( idImages) ,urlImage, Product_idProduct FROM images GROUP BY Product_idProduct)  as img ON img.Product_idProduct = product.idProduct
+  INNER JOIN user ON user.idUser=product.User_idUser
+  WHERE user.State_idState=1
+  AND user.idUser = "${idUser}"
+  GROUP BY product.idProduct
+  ORDER BY status desc, product.datePublication desc`;
+
   try {
     const [result] = await db.query(consulta);
     return result;
