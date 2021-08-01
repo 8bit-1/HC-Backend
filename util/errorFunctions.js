@@ -1,9 +1,7 @@
-function excepcion(mensaje, error) {
+function excepcion(mensaje, error = {}) {
   this.message = mensaje;
-  this.error = error;
-  this.toString = function () {
-    return this.message + this.error;
-  };
+  this.stack = error.stack;
+  this.code = error.code;
 }
 
 module.exports = {
