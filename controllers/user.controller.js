@@ -96,6 +96,34 @@ const unsubscribeCategory = async (req, res) => {
   }
 };
 
+const getAllUserProducts = async (req, res) => {
+  try {
+    const idUser = req.idUser;
+    const products = await userService.getAllUserProducts(idUser);
+
+    return res.status(200).json({ data: products, message: 'Success' });
+  } catch (error) {
+    if (error.code == 'auth/id-token-revoked') {
+      res.status(403).json({ status: 403, error: { message: 'token revoked' } });
+    }
+    res.status(400).json({ status: 400, error });
+  }
+};
+
+const getUserInactiveProducts = async (req, res) => {
+  try {
+    const idUser = req.idUser;
+    const products = await userService.getUserInactiveProducts(idUser);
+
+    return res.status(200).json({ data: products, message: 'Success' });
+  } catch (error) {
+    if (error.code == 'auth/id-token-revoked') {
+      res.status(403).json({ status: 403, error: { message: 'token revoked' } });
+    }
+    res.status(400).json({ status: 400, error });
+  }
+};
+
 module.exports = {
   getUsers,
   getUser,
@@ -105,4 +133,6 @@ module.exports = {
   getUserProducts,
   subscribeCategory,
   unsubscribeCategory,
+  getAllUserProducts,
+  getUserInactiveProducts,
 };
