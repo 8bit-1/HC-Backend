@@ -5,7 +5,7 @@ const { excepcion } = require('../util/errorFunctions');
 const getUserById = async function (id) {
   //Consulta sql aqui
 
-  var consulta = 'SELECT * FROM USER WHERE idUser=?';
+  var consulta = 'CALL getUserByUid(?)';
 
   try {
     const [user] = await db.execute(consulta, [id]);
