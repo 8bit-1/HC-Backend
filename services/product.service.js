@@ -138,14 +138,24 @@ const getProductsById = async function (idProduct) {
                             WHERE  product.State_idState=1
                             AND user.State_idState=1
                             AND product.idProduct=?`;
-  const getCommentsProducts = `SELECT pc.User_idUser as idUser, CONCAT(user.name, " ", user.lastname) as name, c.idComentary, c.comentary, CONVERT( DATE_FORMAT(c.datePublication,  "%d/%b/%y"),char) AS date, DATE_FORMAT(c.datePublication, " %H:%i %p ") as time 
-                            FROM comentary as c INNER JOIN productcomentary as pc ON pc.Comentary_idComentary= c.idComentary
-                            INNER JOIN product as p ON p.idProduct=pc.Product_idProduct
-                            INNER JOIN user ON pc.User_idUser=user.idUser 
-                            where c.State_idState=1 AND pc.Product_idProduct=28 ORDER BY c.datePublication;`;
+  const getCommentsProducts = `SELECT idUser, name, photoProfile, idComentary, comentary, date,  time FROM (SELECT user.idUser as idUser, CONCAT(user.name, " ", user.lastname) as name, user.photoProfile, c.idComentary, c.comentary, CONVERT( DATE_FORMAT(c.datePublication,  "%d/%b/%y"),char) AS date, DATE_FORMAT(c.datePublication, " %H:%i %p ") as time 
+                                  FROM comentary as c INNER JOIN productcomentary as pc ON pc.Comentary_idComentary= c.idComentary
+                                  INNER JOIN product as p ON p.idProduct=pc.Product_idProduct
+                                  INNER JOIN user ON pc.User_idUser=user.idUser 
+                                  where user.idUser NOT IN (SELECT User_idUser FROM company) AND c.State_idState=1 AND pc.Product_idProduct=? 
+                                UNION ALL
+                              SELECT user.idUser as idUser, company.nameCompany as name, user.photoProfile, c.idComentary, c.comentary, CONVERT( DATE_FORMAT(c.datePublication,  "%d/%b/%y"),char) AS date, DATE_FORMAT(c.datePublication, " %H:%i %p ") as time 
+                                FROM comentary as c INNER JOIN productcomentary as pc ON pc.Comentary_idComentary= c.idComentary
+                                INNER JOIN product as p ON p.idProduct=pc.Product_idProduct
+                                INNER JOIN user ON pc.User_idUser=user.idUser
+                                inner join company ON  user.idUser=company.User_idUser
+                                where  c.State_idState=1 AND pc.Product_idProduct=? ) comments order by  date, time ;`;
   const company = `SELECT count(*) as company FROM company where User_idUser=?`;
   const companies = `SELECT idCompany, nameCompany, description FROM company where User_idUser=?`;
   const images = `SELECT urlImage as images from images where Product_idProduct=?`;
+  const cali = `SELECT cast(AVG(c.calificacion)  as UNSIGNED) as qualy  FROM calification as c inner join productcalification as pc
+                ON c.idCalification=pc.Calification_idCalification
+                WHERE pc.Product_idProduct=?`
   let userid = " ";
   try {
     let [infoP] = await db.execute(infoProduct, [
@@ -160,14 +170,18 @@ const getProductsById = async function (idProduct) {
       idProduct
     ]);
     
+    const [note] = await db.execute(cali, [
+      idProduct
+    ]);
+
     infoP=infoP[0];
     var result=[];
     var comentaries=[];
     for (var i=0; i<img.length; i++){
       result.push(img[i].images);
     }
-    const [comments] = await db.execute(getCommentsProducts, [idProduct]);
-
+    const [comments] = await db.execute(getCommentsProducts, [idProduct,idProduct]);
+    infoP["calification"]=((note[0].qualy==null)? 5 :note[0].qualy);
     infoP["company"]=count[0].company;
     infoP["images"]=result;
     infoP["comments"]=comments;
