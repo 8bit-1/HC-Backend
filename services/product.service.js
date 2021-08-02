@@ -127,7 +127,7 @@ const getProductsLogged = async function (idUser, init, range) {
 };
 
 const getProductsById = async function (idProduct) {
-  const infoProduct = `SELECT product.idProduct, product.User_idUser as idUser, CONCAT(user.name, " ", user.lastname) as name, user.email, user.verification, product.description,
+  const infoProduct = `SELECT product.idProduct, product.User_idUser as idUser, CONCAT(user.name, " ", user.lastname) as name, user.email, user.photoProfile as profilePicture, user.verification, product.description,
                             CONCAT(city.city,", ",country.country) as location, CONCAT(product.price," ",RIGHT( coin.coin,3 )) as cost
                             FROM product INNER JOIN city  ON product.City_idCity=city.idCity AND  product.City_Province_idProvince=city.Province_idProvince
                             AND product.City_Province_Country_idCountry=city.Province_Country_idCountry 
@@ -149,7 +149,7 @@ const getProductsById = async function (idProduct) {
                                 INNER JOIN product as p ON p.idProduct=pc.Product_idProduct
                                 INNER JOIN user ON pc.User_idUser=user.idUser
                                 inner join company ON  user.idUser=company.User_idUser
-                                where  c.State_idState=1 AND pc.Product_idProduct=? ) comments order by  date, time ;`;
+                                where  c.State_idState=1 AND p.State_idState=1 AND pc.Product_idProduct=? ) comments order by  date, time ;`;
   const company = `SELECT count(*) as company FROM company where User_idUser=?`;
   const companies = `SELECT idCompany, nameCompany, description FROM company where User_idUser=?`;
   const images = `SELECT urlImage as images from images where Product_idProduct=?`;
