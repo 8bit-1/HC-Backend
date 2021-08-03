@@ -14,8 +14,8 @@ const getUsers = async (req, res) => {
 const getUser = async (req, res) => {
   // Validate request parameters, queries using express-validator
   try {
-    let users = await userService.getUserById(req.params.idUser);
-    return res.status(200).json({ data: users, message: 'Success' });
+    let [user] = await userService.getUserById(req.params.idUser);
+    return res.status(200).json({ data: user, message: 'Success' });
   } catch (error) {
     return res.status(400).json({ status: 400, error });
   }
