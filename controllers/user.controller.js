@@ -15,6 +15,7 @@ const getUser = async (req, res) => {
   // Validate request parameters, queries using express-validator
   try {
     let [user] = await userService.getUserById(req.params.idUser);
+    console.log(user);
     return res.status(200).json({ data: user, message: 'Success' });
   } catch (error) {
     return res.status(400).json({ status: 400, error });
@@ -124,6 +125,24 @@ const getUserInactiveProducts = async (req, res) => {
   }
 };
 
+const userPictureProfile = async (req, res) => {
+  try {
+    let picture = await userService.changeProfilePicture(req.body.uid, req.body.urlPicture);
+    return res.status(200).json({ data: picture, message: 'Success' });
+  } catch (error) {
+    return res.status(400).json({ status: 400, error });
+  }
+};
+
+const setStatusTips = async (req, res) => {
+  try {
+    let status = await userService.setStatusTips(req.body.uid, req.body.newStatus);
+    return res.status(200).json({ data: status, message: 'Success' });
+  } catch (error) {
+    return res.status(400).json({ status: 400, error });
+  }
+};
+
 module.exports = {
   getUsers,
   getUser,
@@ -135,4 +154,6 @@ module.exports = {
   unsubscribeCategory,
   getAllUserProducts,
   getUserInactiveProducts,
+  userPictureProfile,
+  setStatusTips,
 };
