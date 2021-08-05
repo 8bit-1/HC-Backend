@@ -1,10 +1,14 @@
-const db = require("../config/db.config");
+const db = require('../config/db.config');
 
 const createProduct = async function (params, idUser) {
   var consulta = `INSERT INTO product (name, quantity, price, description, Coin_idCoin, Category_idCategory, City_Province_Country_idCountry, City_Province_idProvince, City_idCity, User_idUser) VALUES (?,?,?,?,?,?,?,?,?,?)`;
   var imagenes = `INSERT INTO images(urlImage,Product_idProduct) values (?,?)`;
   try {
-    const [estado] = await db.execute(consulta, [
+    const conn = await db.getConnection();
+
+    // console.log(conn.threadId);
+
+    const [estado] = await conn.execute(consulta, [
       params.name,
       params.quantity,
       params.price,
@@ -18,21 +22,24 @@ const createProduct = async function (params, idUser) {
     ]);
 
     var idProduct = `SELECT last_insert_id() as idProduct;`;
-    const [producto] = await db.execute(idProduct);
+    const [producto] = await conn.execute(idProduct);
     console.log(producto[0].idProduct);
-    params.images.forEach(async (element) => {
-      const [state] = await db.execute(imagenes, [
-        element,
-        producto[0].idProduct,
-      ]);
-    });
 
-    if (estado.affectedRows != 0)
-      return (message = "Product created sucessfully");
+    for (element of params.images) {
+      const [state] = await conn.execute(imagenes, [element, producto[0].idProduct]);
+      if (state.affectedRows == 0) throw Error('Error agregando imagen');
+    }
+
+    // params.images.forEach(async (element) => {
+    //   const [state] = await conn.execute(imagenes, [element, producto[0].idProduct]);
+    // });
+
+    conn.release();
+    if (estado.affectedRows != 0) return 'Product created sucessfully';
 
     return {};
   } catch (error) {
-    throw Error("Error while Creating Product: " + error);
+    throw Error('Error while Creating Product: ' + error);
   }
 };
 
@@ -60,12 +67,11 @@ const updateProduct = async function (params, idProduct) {
     params.addImages.forEach(async (element) => {
       const [add] = await db.execute(newImages, [element, idProduct]);
     });
-    if (modified.affectedRows != 0)
-      return (message = "Product created sucessfully");
+    if (modified.affectedRows != 0) return (message = 'Product created sucessfully');
 
     return {};
   } catch (error) {
-    throw Error("Error while updating Product: " + error);
+    throw Error('Error while updating Product: ' + error);
   }
 };
 
@@ -91,7 +97,7 @@ const getProducts = async function (init, range) {
     const [productos] = await db.execute(getAllProducts, [init, range]);
     return productos;
   } catch (error) {
-    throw Error("Error while Paginating products: " + error);
+    throw Error('Error while Paginating products: ' + error);
   }
 };
 
@@ -115,14 +121,10 @@ const getProductsLogged = async function (idUser, init, range) {
     ORDER BY product.datePublication DESC
     LIMIT ?,?`;
   try {
-    const [productos] = await db.execute(getAllProductsLogged, [
-      idUser,
-      init,
-      range,
-    ]);
+    const [productos] = await db.execute(getAllProductsLogged, [idUser, init, range]);
     return productos;
   } catch (error) {
-    throw Error("Error while Paginating products: " + error);
+    throw Error('Error while Paginating products: ' + error);
   }
 };
 
@@ -155,49 +157,39 @@ const getProductsById = async function (idProduct) {
   const images = `SELECT urlImage as images from images where Product_idProduct=?`;
   const cali = `SELECT cast(AVG(c.calificacion)  as UNSIGNED) as qualy  FROM calification as c inner join productcalification as pc
                 ON c.idCalification=pc.Calification_idCalification
-                WHERE pc.Product_idProduct=?`
-  let userid = " ";
+                WHERE pc.Product_idProduct=?`;
+  let userid = ' ';
   try {
-    let [infoP] = await db.execute(infoProduct, [
-      idProduct
-    ]);
-    let [count]=await db.execute(company, [
-      infoP[0].idUser
-    ]);
-    userid=infoP[0].idUser;
+    let [infoP] = await db.execute(infoProduct, [idProduct]);
+    let [count] = await db.execute(company, [infoP[0].idUser]);
+    userid = infoP[0].idUser;
 
-    const [img] = await db.execute(images, [
-      idProduct
-    ]);
-    
-    const [note] = await db.execute(cali, [
-      idProduct
-    ]);
+    const [img] = await db.execute(images, [idProduct]);
 
-    infoP=infoP[0];
-    var result=[];
-    var comentaries=[];
-    for (var i=0; i<img.length; i++){
+    const [note] = await db.execute(cali, [idProduct]);
+
+    infoP = infoP[0];
+    var result = [];
+    var comentaries = [];
+    for (var i = 0; i < img.length; i++) {
       result.push(img[i].images);
     }
-    const [comments] = await db.execute(getCommentsProducts, [idProduct,idProduct]);
-    infoP["calification"]=((note[0].qualy==null)? 5 :note[0].qualy);
-    infoP["company"]=count[0].company;
-    infoP["images"]=result;
-    infoP["comments"]=comments;
-    if(count[0].company===0){
+    const [comments] = await db.execute(getCommentsProducts, [idProduct, idProduct]);
+    infoP['calification'] = note[0].qualy == null ? 5 : note[0].qualy;
+    infoP['company'] = count[0].company;
+    infoP['images'] = result;
+    infoP['comments'] = comments;
+    if (count[0].company === 0) {
       return infoP;
-    }else{
-      let [cc] = await db.execute(companies, [
-        userid ]);
-      infoP["idCompany"]=cc[0].idCompany;
-      infoP["nameCompany"]=cc[0].nameCompany;
-      infoP["descCompany"]=cc[0].description;
+    } else {
+      let [cc] = await db.execute(companies, [userid]);
+      infoP['idCompany'] = cc[0].idCompany;
+      infoP['nameCompany'] = cc[0].nameCompany;
+      infoP['descCompany'] = cc[0].description;
       return infoP;
     }
-    
   } catch (error) {
-    throw Error("Error getting products products: " + error);
+    throw Error('Error getting products products: ' + error);
   }
 };
 module.exports = {
