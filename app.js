@@ -20,6 +20,7 @@ const categoryRoute = require('./routes/category.route');
 const qualificationRoute = require('./routes/qualification.route');
 
 const comentaryRoute = require('./routes/comentary.route');
+const reportRoute = require('./routes/report.route');
 
 // SETTINGS
 app.set('port', process.env.PORT || 6000);
@@ -39,6 +40,7 @@ app.use('/app', coinRoute);
 app.use('/app', categoryRoute);
 app.use('/quali', qualificationRoute);
 app.use('/comment', comentaryRoute);
+app.use('/report', reportRoute);
 
 
 //Starting Server
