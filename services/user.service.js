@@ -210,6 +210,26 @@ from product INNER JOIN city  ON product.City_idCity=city.idCity
   }
 };
 
+const changeProfilePicture = async (uid, urlPicture) => {
+  const query = `UPDATE hechoencasa.user SET photoProfile = '${urlPicture}'  WHERE idUser = '${uid}';`;
+  try {
+    const [response] = await db.query(query);
+    return response;
+  } catch (error) {
+    throw new excepcion('We have a problem with update the picture.', error);
+  }
+}
+
+const setStatusTips = async (uid, status) => {
+  const query = `UPDATE hechoencasa.user SET State_idState = '${status}'  WHERE idUser = '${uid}';`;
+  try {
+    const [response] = await db.query(query);
+    return response;
+  } catch (error) {
+    throw new excepcion('Error changed the status tips.', error);
+  }
+}
+
 module.exports = {
   getUsers,
   createUser,
@@ -221,4 +241,6 @@ module.exports = {
   unsubscribeCategory,
   getAllUserProducts,
   getUserInactiveProducts,
+  changeProfilePicture,
+  setStatusTips,
 };

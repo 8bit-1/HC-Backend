@@ -15,6 +15,7 @@ const getUser = async (req, res) => {
   // Validate request parameters, queries using express-validator
   try {
     let [user] = await userService.getUserById(req.params.idUser);
+    console.log(user);
     return res.status(200).json({ data: user, message: 'Success' });
   } catch (error) {
     return res.status(400).json({ status: 400, error });
@@ -60,6 +61,20 @@ const getSubscribedCategories = async (req, res) => {
 const getUserProducts = async (req, res) => {
   try {
     const idUser = req.idUser;
+    const products = await userService.getUserProducts(idUser);
+
+    return res.status(200).json({ data: products, message: 'Success' });
+  } catch (error) {
+    if (error.code == 'auth/id-token-revoked') {
+      res.status(403).json({ status: 403, error: { message: 'token revoked' } });
+    }
+    res.status(400).json({ status: 400, error });
+  }
+};
+
+const getUserProducts2 = async (req, res) => {
+  try {
+    const idUser = req.params.idUser;
     const products = await userService.getUserProducts(idUser);
 
     return res.status(200).json({ data: products, message: 'Success' });
@@ -124,6 +139,24 @@ const getUserInactiveProducts = async (req, res) => {
   }
 };
 
+const userPictureProfile = async (req, res) => {
+  try {
+    let picture = await userService.changeProfilePicture(req.body.uid, req.body.urlPicture);
+    return res.status(200).json({ data: picture, message: 'Success' });
+  } catch (error) {
+    return res.status(400).json({ status: 400, error });
+  }
+};
+
+const setStatusTips = async (req, res) => {
+  try {
+    let status = await userService.setStatusTips(req.body.uid, req.body.newStatus);
+    return res.status(200).json({ data: status, message: 'Success' });
+  } catch (error) {
+    return res.status(400).json({ status: 400, error });
+  }
+};
+
 module.exports = {
   getUsers,
   getUser,
@@ -131,8 +164,11 @@ module.exports = {
   createUserCompany,
   getSubscribedCategories,
   getUserProducts,
+  getUserProducts2,
   subscribeCategory,
   unsubscribeCategory,
   getAllUserProducts,
   getUserInactiveProducts,
+  userPictureProfile,
+  setStatusTips,
 };
