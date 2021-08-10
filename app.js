@@ -21,6 +21,7 @@ const qualificationRoute = require('./routes/qualification.route');
 
 const comentaryRoute = require('./routes/comentary.route');
 
+const complaintRoute = require('./routes/complaint.route');
 // SETTINGS
 app.set('port', process.env.PORT || 6000);
 
@@ -40,7 +41,7 @@ app.use('/app', categoryRoute);
 app.use('/quali', qualificationRoute);
 app.use('/comment', comentaryRoute);
 
-
+app.use('/complaint', complaintRoute);
 //Starting Server
 app.listen(app.get('port'), () => {
   console.log('Server on port', app.get('port'));
