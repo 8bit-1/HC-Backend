@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { AuthToken } = require('../middlewares/tokenAuth');
+const { noToken } = require('../middlewares/noTokenTest');
 
 const qualificationController = require('../controllers/qualification.controller');
 
@@ -10,4 +11,4 @@ router.route('/verifyLike/:Seller').all(AuthToken).get(qualificationController.v
 router.route('/giveLike/:Seller').all(AuthToken).post(qualificationController.giveLike);
 router.route('/disLike/:Seller').all(AuthToken).post(qualificationController.disLike);
 
-module.exports=router;
+module.exports = router;
