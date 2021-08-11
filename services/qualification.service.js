@@ -3,11 +3,13 @@ const db = require('../config/db.config');
 const qualificationProduct = async function (qualification, idUser, idProduct) {
   var query = `call rateProduct(?,?,?)`;
   try {
-    const [estado] = await db.execute(query, [qualification.calification, idUser, idProduct]);
-
-    if (estado.affectedRows != 0) return (message = 'Calification created sucessfully');
-
-    return {};
+    let [estado] = await db.execute(query, [qualification.calification, idUser, idProduct]);
+    const [[{ message: status }]] = estado;
+    if (status != '1') {
+      throw new Error(status);
+    }
+    [[estado]] = estado;
+    return estado;
   } catch (error) {
     throw Error('Error while Creating calification: ' + error);
   }
@@ -62,7 +64,7 @@ const verifyLike = async function (idUser, Seller) {
     let [estado] = await db.execute(query, [idUser, Seller]);
     return estado;
   } catch (error) {
-    throw Error('Error while get like: ' + error);
+    throw Error('Error while get like: ' + error.message);
   }
 };
 
