@@ -12,6 +12,7 @@ router.route('/categories').all(AuthToken).get(userController.getSubscribedCateg
 router.route('/category/:idCategory/subscribe').all(AuthToken).post(userController.subscribeCategory);
 router.route('/category/:idCategory/unsubscribe').all(AuthToken).delete(userController.unsubscribeCategory);
 router.route('/product').all(AuthToken).get(userController.getUserProducts);
+router.route('/product-public/:idUser').get(userController.getUserProducts2);
 router.route('/products-history').all(AuthToken).get(userController.getAllUserProducts);
 router.route('/products-inactive').all(AuthToken).get(userController.getUserInactiveProducts);
 router.route('/profile/updateImage').all(AuthToken).put(userController.userPictureProfile);
