@@ -15,6 +15,6 @@ router.route('/product').all(AuthToken).get(userController.getUserProducts);
 router.route('/products-history').all(AuthToken).get(userController.getAllUserProducts);
 router.route('/products-inactive').all(AuthToken).get(userController.getUserInactiveProducts);
 router.route('/profile/updateImage').all(AuthToken).put(userController.userPictureProfile);
-router.route('/profile/setStatusTips').put(userController.setStatusTips);
+router.route('/profile/setStatusTips').all(AuthToken).put(userController.setStatusTips);
 
 module.exports = router;

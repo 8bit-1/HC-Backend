@@ -26,7 +26,7 @@ const createUser = async (req, res) => {
   try {
     //Verificar que los nombre de los parametros sean correctos
     let user = await userService.createUser(req.body);
-    return res.status(200).json({ data: user, message: 'Success' });
+    return res.status(200).json({ data: user[0], message: 'Success' });
   } catch (error) {
     return res.status(400).json({ status: 400, error });
   }
