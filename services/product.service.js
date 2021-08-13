@@ -144,14 +144,14 @@ const getProductsById = async function (idProduct) {
   FROM comentary as c INNER JOIN productcomentary as pc ON pc.Comentary_idComentary= c.idComentary
   INNER JOIN product as p ON p.idProduct=pc.Product_idProduct
   INNER JOIN user ON pc.User_idUser=user.idUser 
-  where user.idUser NOT IN (SELECT User_idUser FROM company) AND c.State_idState=1 AND pc.Product_idProduct=33 
+  where user.idUser NOT IN (SELECT User_idUser FROM company) AND c.State_idState=1 AND pc.Product_idProduct=? 
 UNION ALL
 SELECT user.idUser as idUser, company.nameCompany as name, user.photoProfile, c.idComentary, c.comentary, CONVERT( DATE_FORMAT(c.datePublication,  "%d/%b/%y"),char) AS date, DATE_FORMAT(c.datePublication, " %H:%i %p ") as time 
 FROM comentary as c INNER JOIN productcomentary as pc ON pc.Comentary_idComentary= c.idComentary
 INNER JOIN product as p ON p.idProduct=pc.Product_idProduct
 INNER JOIN user ON pc.User_idUser=user.idUser
 inner join company ON  user.idUser=company.User_idUser
-where  c.State_idState=1 AND p.State_idState=1 AND pc.Product_idProduct=33 ) comments order by idComentary DESC ;`;
+where  c.State_idState=1 AND p.State_idState=1 AND pc.Product_idProduct=? ) comments order by idComentary DESC ;`;
   const company = `SELECT count(*) as company FROM company where User_idUser=?`;
   const companies = `SELECT idCompany, nameCompany, description FROM company where User_idUser=?`;
   const images = `SELECT urlImage as images from images where Product_idProduct=?`;
