@@ -221,7 +221,7 @@ const changeProfilePicture = async (uid, urlPicture) => {
 }
 
 const setStatusTips = async (uid, status) => {
-  const query = `UPDATE hechoencasa.user SET State_idState = '${status}'  WHERE idUser = '${uid}';`;
+  const query = `UPDATE hechoencasa.user SET new = '${status}'  WHERE idUser = '${uid}';`;
   try {
     const [response] = await db.query(query);
     return response;
