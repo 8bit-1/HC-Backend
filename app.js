@@ -23,6 +23,7 @@ const comentaryRoute = require('./routes/comentary.route');
 const reportRoute = require('./routes/report.route');
 
 const complaintRoute = require('./routes/complaint.route');
+const landingRoute = require('./routes/landing.route');
 // SETTINGS
 app.set('port', process.env.PORT || 6000);
 
@@ -44,6 +45,7 @@ app.use('/comment', comentaryRoute);
 app.use('/report', reportRoute);
 
 app.use('/complaint', complaintRoute);
+app.use('/landing', landingRoute);
 //Starting Server
 app.listen(app.get('port'), () => {
   console.log('Server on port', app.get('port'));
