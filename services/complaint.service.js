@@ -43,8 +43,20 @@ const reportUsers = async ( report,idUser, accused) => {
     }
   };
 
+
+  const verifyComplaintUser = async function (idUser, accused) {
+    const query = `SELECT count(*) complaint from usercomplaint where accuser=? and accused=? `;
+    try {
+      let [estado] = await db.execute(query, [idUser, accused]);
+      return estado;
+    } catch (error) {
+      throw Error('Error while verify Complaint: ' + error.message);
+    }
+  };
+
 module.exports = {
     reportProducts,
     reportUsers,
-    reportComments
+    reportComments,
+    verifyComplaintUser
 };
