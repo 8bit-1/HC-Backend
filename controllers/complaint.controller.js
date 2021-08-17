@@ -36,8 +36,21 @@ const reportComments = async (req, res) => {
     }
 };
 
+const verifyComplaintUser = async (req, res) => {
+  const accused = req.params.accused;
+  const idUser = req.idUser;
+  try {
+    var like = await complaintService.verifyComplaintUser(idUser, accused);
+    return res.status(200).json({ data: like, message: 'Sucess' });
+  } catch (error) {
+    return res.status(400).json({ status: 400, message: error.message });
+  }
+};
+
+
 module.exports = {
   reportProducts,
   reportUser,
-  reportComments
+  reportComments,
+  verifyComplaintUser
 };
