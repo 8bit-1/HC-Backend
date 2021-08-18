@@ -47,10 +47,33 @@ const verifyComplaintUser = async (req, res) => {
   }
 };
 
+const verifyComplaintProduct = async (req, res) => {
+  const idProduct = req.params.idProduct;
+  const idUser = req.idUser;
+  try {
+    var like = await complaintService.verifyComplaintProduct(idUser, idProduct);
+    return res.status(200).json({ data: like, message: 'Sucess' });
+  } catch (error) {
+    return res.status(400).json({ status: 400, message: error.message });
+  }
+};
+
+const verifyComplaintComment = async (req, res) => {
+  const idComment = req.params.idComment;
+  const idUser = req.idUser;
+  try {
+    var like = await complaintService.verifyComplaintComment(idUser, idComment);
+    return res.status(200).json({ data: like, message: 'Sucess' });
+  } catch (error) {
+    return res.status(400).json({ status: 400, message: error.message });
+  }
+};
 
 module.exports = {
   reportProducts,
   reportUser,
   reportComments,
-  verifyComplaintUser
+  verifyComplaintUser,
+  verifyComplaintProduct,
+  verifyComplaintComment,
 };
