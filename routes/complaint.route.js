@@ -8,4 +8,6 @@ router.route('/product/:idProduct').all(AuthToken).post(complaintController.repo
 router.route('/user/:accused').all(AuthToken).post(complaintController.reportUser);
 router.route('/comments/:idComentary').all(AuthToken).post(complaintController.reportComments);
 router.route('/verifyComplaintUser/:accused').all(AuthToken).get(complaintController.verifyComplaintUser);
+router.route('/verifyComplaintProduct/:idProduct').all(AuthToken).get(complaintController.verifyComplaintProduct);
+router.route('/verifyComplaintComment/:idComment').all(AuthToken).get(complaintController.verifyComplaintComment);
 module.exports=router;
